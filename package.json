@@ -13,6 +13,7 @@
   "dependencies": {
     "dotenv": "^16.1.4",
     "koa": "^2.14.2",
+    "koa-body": "^6.0.1",
     "koa-router": "^12.0.0"
   },
   "devDependencies": {
