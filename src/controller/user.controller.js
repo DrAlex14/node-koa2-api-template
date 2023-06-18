@@ -39,7 +39,7 @@ class UserController {
         const {user_name} = ctx.request.body
 
         try {
-            // 获取的res剔除password
+            // 获取的res剔除password, 其余属性放到新的对象里
             const {password, ...res} = await getUserInfo({user_name})
             ctx.body = {
                 code: 0,
