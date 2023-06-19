@@ -16,7 +16,6 @@ const auth = async (ctx, next) => {
         console.log(user);
 
         ctx.state.user = user
-        ctx.body = '修改密码'
 
     } catch (error) {
         switch (error.name) {

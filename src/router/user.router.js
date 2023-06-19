@@ -9,6 +9,6 @@ router.post('/register', userValidator, verifyUser, cryptPassword, userControlle
 
 router.post('/login', userValidator, verifyLogin, userController.login)
 
-router.patch('/', auth)
+router.patch('/', auth, cryptPassword, userController.changePassword)
 
 module.exports = router
