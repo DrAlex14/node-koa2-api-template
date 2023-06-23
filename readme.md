@@ -936,7 +936,9 @@ module.exports = {
 }
 ```
 
-### 2) 改写 router
+# 十五.修改密码
+
+### 1) 改写 router
 
 ```js
 // 修改密码接口
@@ -946,4 +948,59 @@ router.patch('/', auth, (ctx, next) => {
 })
 ```
 
-新的内容
+### 2) userController中加入changePassword修改密码中间件
+
+```javascript
+// user.router.js
+router.patch('/', auth, cryptPassword, userController.changePassword)
+
+// user.controller.js
+async changePassword(ctx, next) {
+        const {id} = ctx.state.user
+        const {password} = ctx.request.body
+        console.log(id);
+        console.log(password);
+
+        // 操作数据库
+        if (await updateById({id, password})) {
+            ctx.body = {
+                code: 0,
+                message: '修改密码成功',
+                result: '',
+            }
+        } else {
+            ctx.body = {
+                code: '10007',
+                message: '修改密码失败',
+                result: '',
+            }
+        }
+        // 3. 返回结果
+    }
+```
+
+
+
+# 十六. 自动加载路由
+
+router文件夹中建立index.js使用fs模块自动加载文件下路由文件
+
+```javascript
+// src/router/index.js
+const fs = require('fs')
+
+// 自动导入文件夹下所有路由文件
+fs.readdirSync(__dirname).forEach(file => {
+    console.log('filename', file)
+    if (file !== 'index.js') {
+        let r = require('./' + file)
+        router.use(r.routes())
+    }
+})
+
+// src/app/index.js
+app.use(indexRouter.routes()).use(indexRouter.allowedMethods()) // 不支持的请求方式报501错误而不是404
+```
+
+
+
