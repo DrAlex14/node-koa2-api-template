@@ -6,17 +6,12 @@ const {tokenExpiredError, invalidToken, hasNotAdminPermission} = require('../con
 
 
 const auth = async (ctx, next) => {
-    const {
-        authorization
-    } = ctx.request.header
+    const {authorization = ''} = ctx.request.header
     const token = authorization.replace('Bearer ', '')
     try {
-
         const user = jwt.verify(token, JWT_SECRET)
         console.log(user);
-
         ctx.state.user = user
-
     } catch (error) {
         switch (error.name) {
             case 'TokenExpiredError':

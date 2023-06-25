@@ -1002,5 +1002,65 @@ fs.readdirSync(__dirname).forEach(file => {
 app.use(indexRouter.routes()).use(indexRouter.allowedMethods()) // 不支持的请求方式报501错误而不是404
 ```
 
+# 十七. 用户上传商品图片
 
+### 1) router给路由/load添加检测用户是否有管理员权限中间件
+
+```javascript
+const hadAdminPermission = async (ctx, next) => {
+    const {is_admin} = ctx.state.user
+    if (!is_admin) {
+        console.error('用户没有管理员权限', ctx.state.user)
+        ctx.app.emit('error', hasNotAdminPermission, ctx)
+    } else {
+        await next()
+    }
+}
+```
+
+### 2)  koa-body添加设置解析图片等文件参数
+
+```javascript
+app.use(koaBody({
+    multipart: true, // 解析多个文件
+    formidable: {
+        // 在配置option里, 相对路径是相对process.cwd()
+        uploadDir: path.join(__dirname, '../upload'),
+        keepExtensions: true, // 保留文件扩展名
+        maxFieldsSize: 100 * 1024 * 1024 // 设置文件上传大小 默认2M
+    }
+}))
+```
+
+### 3) controller获取请求中文件信息
+
+通过ctx.request.files获取请求中的文件信息
+
+```javascript
+async upload(ctx, next) {
+        console.log(ctx.request.files)
+        const {pic} = ctx.request.files // pic对应请求中文件的key
+        if (pic) {
+            ctx.body = {
+                code: 0,
+                message: '上传图片成功',
+                result: {
+                    goods_img: path.basename(pic.filepath)
+                }
+            }
+        } else {
+            console.error('图片上传失败')
+            ctx.app.emit('error', fileUploadError, ctx)
+        }
+        
+    }
+```
+
+### 4) koa-static对静态资源处理
+
+```javascript
+// src/app/index.js
+
+app.use(KoaStatic(path.join(__dirname, '../upload'))) //可通过'http://localhost:8000/文件名'  访问静态资源
+```
 
