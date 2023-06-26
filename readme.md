@@ -1064,3 +1064,26 @@ async upload(ctx, next) {
 app.use(KoaStatic(path.join(__dirname, '../upload'))) //可通过'http://localhost:8000/文件名'  访问静态资源
 ```
 
+### 5) 检测上传文件的类型
+获取文件的`mimetype`进行正则表达式测试检测文件类型，非支持的文件类型通过fs.unlinkSync删除
+```javascript
+if (pic) {
+    if (!pic.mimetype.match(/image\/.+/)) {
+        console.error('不支持的文件格式')
+        ctx.app.emit('error', unSupportedFileType, ctx)
+        return fs.unlinkSync(pic.filepath)
+    }
+    ctx.body = {
+        code: 0,
+        message: '上传图片成功',
+        result: {
+            goods_img: path.basename(pic.filepath)
+        }
+    }
+} else {
+    console.error('图片上传失败')
+    ctx.app.emit('error', fileUploadError, ctx)
+}
+```
+
+# 十八. 用户发布商品

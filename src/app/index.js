@@ -3,6 +3,7 @@ const path = require('path')
 const KoaStatic = require('koa-static')
 const Koa = require('koa')
 const {koaBody} = require('koa-body')
+const parameter = require('koa-parameter')
 // const userRouter = require('../router/user.router')
 // const goodsRouter = require('../router/goods.router')
 const indexRouter = require('../router')
@@ -19,19 +20,19 @@ app.use(koaBody({
         uploadDir: path.join(__dirname, '../upload'),
         keepExtensions: true, // 保留文件扩展名
         maxFieldsSize: 100 * 1024 * 1024, // 设置文件上传大小 默认2M
-        onFileBegin: (name, file) => {
-            const reg = /\.[A-Za-z]+$/g
-            const ext = file.originalFilename.match(reg)[0]
+        // onFileBegin: (name, file) => {
+        //     const reg = /\.[A-Za-z]+$/g
+        //     const ext = file.originalFilename.match(reg)[0]
 
-            //修改上传文件名
-            // file.filepath = path.join(__dirname, './upload/') + Date.now() + ext
-            // file.newFilename = Date.now()
-            // console.log(file);
-        }
+        //     //修改上传文件名
+        //     // file.filepath = path.join(__dirname, './upload/') + Date.now() + ext
+        //     // file.newFilename = Date.now()
+        //     // console.log(file);
+        // }
     }
 }))
 app.use(KoaStatic(path.join(__dirname, '../upload')))
-
+app.use(parameter(app))
 app.use(indexRouter.routes())
 // app.use(userRouter.routes())
 // app.use(goodsRouter.routes())
