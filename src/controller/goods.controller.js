@@ -2,7 +2,7 @@ const path = require('path')
 const fs = require('fs')
 
 const {fileUploadError, unSupportedFileType, publishGoodsError, invalidGoodsID} = require('../constant/error.type')
-const {createGoods, updateGoods} = require('../service/goods.service')
+const {createGoods, updateGoods, hardDeleteGoods} = require('../service/goods.service')
 
 class goodsController {
     async upload(ctx, next) {
@@ -59,6 +59,24 @@ class goodsController {
             
         } catch (error) {
             console.error(error);
+        }
+    }
+
+    async hardDelete(ctx, next) {
+        const {id} = ctx.params
+        try {
+            const res = await hardDeleteGoods(id)
+            if (res) {
+                ctx.body = {
+                    code: 0,
+                    message: '彻底删除商品成功',
+                    res: ''
+                }
+            } else {
+                ctx.app.emit('error', invalidGoodsID, ctx)
+            }
+        } catch (error) {
+            console.log(error);
         }
     }
 }
