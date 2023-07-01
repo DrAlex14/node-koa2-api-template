@@ -1087,3 +1087,64 @@ if (pic) {
 ```
 
 # 十八. 用户发布商品
+### 1) 硬删除商品
+sequelize的 delete查询,使用Model.destroy方法将在数据库中直接移除数据
+```javascript
+async hardDeleteGoods(id) {
+    const res = await Goods.destroy({where: {id}})
+    console.log('res', res);
+    return res > 0
+}
+```
+
+### 2) 偏执表
+通常不会直接在数据库中彻底移除数据，而是通过修改一个单独字段改变是否删除的状态
+
+Sequelize 支持 paranoid 表的概念. 一个 paranoid 表是一个被告知删除记录时不会真正删除它的表.反而一个名为 deletedAt 的特殊列会将其值设置为该删除请求的时间戳.
+这意味着偏执表会执行记录的 软删除,而不是 硬删除
+```javascript
+const Goods = seq.define('Goods', {
+        goods_name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            comment: '商品名称'
+        },
+        goods_price: {
+            type: DataTypes.DECIMAL(10, 2),
+            allowNull: false,
+            comment: '商品价格'
+        },
+        goods_num: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            comment: '商品数量'
+        },
+        goods_img: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            comment: '商品图片的url'
+        }
+    }, {
+        // 软删除 link: https://www.sequelize.cn/core-concepts/paranoid
+        paranoid: true
+    }
+)
+```
+
+当你调用 destroy 方法时,将发生软删除
+```javascript
+async offShelfGoods(id) {
+    const res = await Goods.destroy({where: {id}})
+    return res > 0
+}
+// UPDATE "goods" SET "deletedAt"=[timestamp] WHERE "deletedAt" IS NULL AND "id" = id
+```
+
+当你调用 restore 方法时,恢复软删除的记录
+```javascript
+async onShelfGoods(id) {
+    const res = await Goods.restore({where: {id}})
+    console.log(res)
+    return res > 0
+}
+```

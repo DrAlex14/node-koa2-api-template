@@ -16,6 +16,17 @@ class GoodsService {
         console.log('res', res);
         return res > 0
     }
+
+    async offShelfGoods(id) {
+        const res = await Goods.destroy({where: {id}})
+        return res > 0
+    }
+
+    async onShelfGoods(id) {
+        const res = await Goods.restore({where: {id}})
+        console.log(res)
+        return res > 0
+    }
 }
 
 module.exports = new GoodsService()

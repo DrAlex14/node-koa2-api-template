@@ -2,7 +2,7 @@ const path = require('path')
 const fs = require('fs')
 
 const {fileUploadError, unSupportedFileType, publishGoodsError, invalidGoodsID} = require('../constant/error.type')
-const {createGoods, updateGoods, hardDeleteGoods} = require('../service/goods.service')
+const {createGoods, updateGoods, hardDeleteGoods, offShelfGoods, onShelfGoods} = require('../service/goods.service')
 
 class goodsController {
     async upload(ctx, next) {
@@ -77,6 +77,32 @@ class goodsController {
             }
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    async offShelf(ctx, next) {
+        const {id} = ctx.params
+        if (await offShelfGoods(id)) {
+            ctx.body = {
+                code: 0,
+                message: '下架商品成功',
+                result: ''
+            }
+        } else {
+            return ctx.app.emit('error', invalidGoodsID, ctx)
+        }
+    }
+
+    async onShelf(ctx, next) {
+        const {id} = ctx.params
+        if (await onShelfGoods(id)) {
+            ctx.body = {
+                code: 0,
+                message: '上架商品成功',
+                result: ''
+            }
+        } else {
+            return ctx.app.emit('error', invalidGoodsID, ctx)
         }
     }
 }
