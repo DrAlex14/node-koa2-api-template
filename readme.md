@@ -1148,3 +1148,31 @@ async onShelfGoods(id) {
     return res > 0
 }
 ```
+
+# 十九. 商品列表
+findAndCountAll 方法是结合了 findAll 和 count 的便捷方法. 在处理与分页有关的查询时非常有用,在分页中,你想检索带有 limit 和 offset 的数据,但又需要知道与查询匹配的记录总数.
+
+当没有提供 group 时, findAndCountAll 方法返回一个具有两个属性的对象：
+
+count - 一个整数 - 与查询匹配的记录总数
+rows - 一个数组对象 - 获得的记录
+当提供了 group 时, findAndCountAll 方法返回一个具有两个属性的对象：
+
+count - 一个数组对象 - 包含每组中的合计和预设属性
+rows - 一个数组对象 - 获得的记录
+
+```javascript
+async findAllGoods(pageSize, pageNum) {
+    const offset = (pageNum - 1) * pageSize // 偏移量
+    const {count, rows} = await Goods.findAndCountAll({
+        offset: offset,
+        limit: pageSize * 1 // limit默认为string, *1使参数值为number
+    })
+    return {
+        pageNum,
+        pageSize,
+        total: count, // 总共数据量
+        list: rows    // 获取到的数据
+    }
+}
+```

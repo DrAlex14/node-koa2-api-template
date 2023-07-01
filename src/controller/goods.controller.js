@@ -2,7 +2,7 @@ const path = require('path')
 const fs = require('fs')
 
 const {fileUploadError, unSupportedFileType, publishGoodsError, invalidGoodsID} = require('../constant/error.type')
-const {createGoods, updateGoods, hardDeleteGoods, offShelfGoods, onShelfGoods} = require('../service/goods.service')
+const {createGoods, updateGoods, hardDeleteGoods, offShelfGoods, onShelfGoods, findAllGoods} = require('../service/goods.service')
 
 class goodsController {
     async upload(ctx, next) {
@@ -103,6 +103,19 @@ class goodsController {
             }
         } else {
             return ctx.app.emit('error', invalidGoodsID, ctx)
+        }
+    }
+
+    async findAll(ctx, next) {
+        // 解析pageSize 和 pageNum
+        const {pageSize = 10, pageNum = 1} = ctx.request.query
+        // 调用数据处理相关方法
+        const res = await findAllGoods(pageSize, pageNum)
+        // 返回结果
+        ctx.body = {
+            code: 0,
+            message: '获取商品列表成功',
+            res: res
         }
     }
 }
