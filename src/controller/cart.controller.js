@@ -8,7 +8,7 @@ class Cart {
         const res = await createOrUpdate(user_id, goods_id)
         ctx.body = {
             code: 0,
-            message: '成功添加到购物车',
+            message: '添加到购物车操作完成',
             result: res
         }
     }
