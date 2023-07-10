@@ -36,6 +36,30 @@ class CartsService {
             }
         }
     }
+
+    async findCarts(user_id, pageSize, pageNum) {
+        const offset = pageSize * (pageNum - 1)
+        const {count, rows} = await Carts.findAndCountAll({
+            where: {
+                user_id
+            },
+            attributes: ['id', 'number', 'selected'],
+            include: {
+                model: Goods,
+                as: 'goods_info',
+                attributes: ['id', 'goods_name', 'goods_price', 'goods_img'],
+            },
+            offset: offset,
+            limit: pageSize * 1
+        })
+
+        return {
+            pageNum,
+            pageSize,
+            total: count,
+            list: rows
+        }
+    }
 }
 
 module.exports = new CartsService()

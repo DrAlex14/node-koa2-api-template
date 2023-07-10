@@ -31,6 +31,8 @@ const Carts = seq.define('Carts', {
 
 // 同步数据(建表)
 // Carts.sync({force: true})
+
+// Carts和Goods表存在一对一关系，外键在Carts中定义
 Carts.belongsTo(Goods, {
     foreignKey: 'goods_id',
     as: 'goods_info'
