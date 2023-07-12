@@ -1,4 +1,5 @@
-const {createOrUpdate, findCarts} = require('../service/carts.service.js')
+const {createOrUpdate, findCarts, updateCartsService} = require('../service/carts.service.js')
+const {cartFormatError} = require('../constant/error.type.js')
 
 class Cart {
     async addCart(ctx, next) {
@@ -23,6 +24,23 @@ class Cart {
         ctx.body = {
             code: 0,
             message: '获取购物车列表成功',
+            result: res
+        }
+    }
+
+    async updateCarts(ctx, next) {
+        const user_id = ctx.state.user.id
+        const {id} = ctx.request.params
+        const {number, selected} = ctx.request.body
+        if (!number && !selected) { // number 和 selected 不能同时缺失
+            cartFormatError.message = 'number和selected不能同时为空'
+            ctx.app.emit('error', cartFormatError, ctx)
+        }
+
+        const res = await updateCartsService({id, number, selected, user_id})
+        ctx.body = {
+            code: 0,
+            message: '更新购物车成功',
             result: res
         }
     }

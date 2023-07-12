@@ -6,7 +6,7 @@ const {auth} = require('../middleware/auth.middleware')
 const {validator} = require('../middleware/cart.middleware')
 
 // 控制件
-const {addCart, findAll} = require('../controller/cart.controller')
+const {addCart, findAll, updateCarts} = require('../controller/cart.controller')
 
 
 // 实例化router对象
@@ -19,6 +19,9 @@ router.post('/', auth, validator({ goods_id: 'number' }), addCart)
 
 // 查询购物车商品
 router.get('/', auth, findAll)
+
+// 更新购物车selected、number
+router.patch('/:id', auth, updateCarts)
 
 
 // 导出router对象

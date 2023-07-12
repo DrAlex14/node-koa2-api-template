@@ -53,12 +53,30 @@ class CartsService {
             limit: pageSize * 1
         })
 
+        rows.forEach(item => {
+            console.log(item.dataValues)
+            item.dataValues.total_price = (item.goods_info.goods_price * item.number).toFixed(2)
+        })
+
         return {
             pageNum,
             pageSize,
             total: count,
             list: rows
         }
+    }
+
+    async updateCartsService({id, number, selected, user_id}) {
+        const res = await Carts.findOne({where: {
+            id,
+            user_id
+        }})
+        if (!res) return ''
+
+        number !== undefined ? (res.number = number) : ''
+        selected !== undefined ? (res.selected = selected) : ''
+
+        return await res.save()
     }
 }
 
