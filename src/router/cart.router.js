@@ -6,7 +6,7 @@ const {auth} = require('../middleware/auth.middleware')
 const {validator} = require('../middleware/cart.middleware')
 
 // 控制件
-const {addCart, findAll, updateCarts} = require('../controller/cart.controller')
+const {addCart, findAll, updateCarts, removeCarts} = require('../controller/cart.controller')
 
 
 // 实例化router对象
@@ -22,6 +22,9 @@ router.get('/', auth, findAll)
 
 // 更新购物车selected、number
 router.patch('/:id', auth, updateCarts)
+
+// 删除购物车商品
+router.delete('/', auth, validator({ids: 'array'}), removeCarts)
 
 
 // 导出router对象

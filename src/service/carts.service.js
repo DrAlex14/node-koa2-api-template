@@ -78,6 +78,18 @@ class CartsService {
 
         return await res.save()
     }
+
+    async removeCartsService(ids) {
+        const res = await Carts.destroy({
+            where: {
+                id: {
+                    [Op.in]: ids
+                }
+            }
+        })
+
+        return res
+    }
 }
 
 module.exports = new CartsService()

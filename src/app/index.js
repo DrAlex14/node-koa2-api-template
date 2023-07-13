@@ -15,6 +15,7 @@ const app = new Koa()
 
 app.use(koaBody({
     multipart: true, // 解析多个文件
+    parsedMethods: ['POST', 'PUT', 'PATCH', 'DELETE'], // 默认严格模式下不会解析delete请求里的requestbody
     formidable: {
         // 在配置option里, 相对路径是相对process.cwd()
         uploadDir: path.join(__dirname, '../upload'),
