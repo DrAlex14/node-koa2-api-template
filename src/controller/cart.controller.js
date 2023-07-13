@@ -1,4 +1,4 @@
-const {createOrUpdate, findCarts, updateCartsService, removeCartsService} = require('../service/carts.service.js')
+const {createOrUpdate, findCarts, updateCartsService, removeCartsService, selectAllService, cancelSelectAllService} = require('../service/carts.service.js')
 const {cartFormatError} = require('../constant/error.type.js')
 
 class Cart {
@@ -53,6 +53,28 @@ class Cart {
         ctx.body = {
             code: 0,
             message: '商品删除成功',
+            result: res
+        }
+    }
+
+    async selectAll(ctx, next) {
+        const user_id = ctx.state.user.id
+        const res = await selectAllService(user_id)
+
+        ctx.body = {
+            code: 0,
+            message: '全部商品选中',
+            result: res
+        }
+    }
+
+    async cancelSelectAll(ctx, next) {
+        const user_id = ctx.state.user.id
+        const res = await cancelSelectAllService(user_id)
+
+        ctx.body = {
+            code: 0,
+            message: '全部商品取消选中',
             result: res
         }
     }

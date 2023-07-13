@@ -90,6 +90,28 @@ class CartsService {
 
         return res
     }
+
+    async selectAllService(user_id) {
+        return await Carts.update(
+            {selected: true},
+            {
+                where: {
+                    user_id
+                }
+            }
+        )
+    }
+
+    async cancelSelectAllService(user_id) {
+        return await Carts.update(
+            {selected: false},
+            {
+                where: {
+                    user_id
+                }
+            }
+        )
+    }
 }
 
 module.exports = new CartsService()
