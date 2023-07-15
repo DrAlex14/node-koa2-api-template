@@ -1,4 +1,4 @@
-const {addAddrService, addrListService, updateAddrService} = require('../service/address.service')
+const {addAddrService, addrListService, updateAddrService, deleteAddrService, setDefaultAddrService} = require('../service/address.service')
 
 
 class AddressController {
@@ -36,6 +36,32 @@ class AddressController {
         ctx.body = {
             code: 0,
             message: '更新地址成功',
+            result: res
+        }
+    }
+
+    async deleteAddr(ctx) {
+        const {id} = ctx.request.params
+        const user_id = ctx.state.user.id
+        
+        const res = await deleteAddrService(id, user_id)
+
+        ctx.body = {
+            code: 0,
+            message: '删除地址成功',
+            result: res
+        }
+    }
+
+    async setDefaultAddr(ctx) {
+        const {id} = ctx.request.params
+        const user_id = ctx.state.user.id
+        
+        const res = await setDefaultAddrService(id, user_id)
+
+        ctx.body = {
+            code: 0,
+            message: '设置默认地址成功',
             result: res
         }
     }
