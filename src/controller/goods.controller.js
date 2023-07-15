@@ -115,7 +115,7 @@ class goodsController {
         ctx.body = {
             code: 0,
             message: '获取商品列表成功',
-            res: res
+            result: res
         }
     }
 }
