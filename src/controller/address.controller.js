@@ -1,4 +1,4 @@
-const {addAddrService, addrListService} = require('../service/address.service')
+const {addAddrService, addrListService, updateAddrService} = require('../service/address.service')
 
 
 class AddressController {
@@ -23,6 +23,19 @@ class AddressController {
         ctx.body = {
             code: 0,
             message: '获取地址列表成功',
+            result: res
+        }
+    }
+
+    async updateAddr(ctx) {
+        const {id} = ctx.request.params
+        const user_id = ctx.state.user.id
+        const addr = ctx.request.body
+        const res = await updateAddrService(id, user_id, addr)
+
+        ctx.body = {
+            code: 0,
+            message: '更新地址成功',
             result: res
         }
     }

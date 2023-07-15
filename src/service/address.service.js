@@ -1,4 +1,5 @@
 
+const { where } = require('sequelize')
 const Address = require('../model/address.model')
 
 class AddressService{
@@ -13,6 +14,11 @@ class AddressService{
             where: {user_id}
         })
 
+        return res
+    }
+
+    async updateAddrService(id, user_id, addr) {
+        const res = await Address.update(addr, {where: {id, user_id}})
         return res
     }
 }
