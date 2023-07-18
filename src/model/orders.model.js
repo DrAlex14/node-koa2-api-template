@@ -36,6 +36,6 @@ const Orders = seq.define('orders', {
     }
 })
 
-Orders.sync({force: true})
+// Orders.sync({force: true})
 
 module.exports = Orders
