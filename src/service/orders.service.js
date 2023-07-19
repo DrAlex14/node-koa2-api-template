@@ -23,6 +23,10 @@ class OrdersService{
 
         // return await Orders.findAll({where: {user_id, status}})
     }
+
+    async updateOrdersService(id, status) {
+        return await Orders.update({status}, {where: {id}})
+    }
 }
 
 module.exports = new OrdersService()
